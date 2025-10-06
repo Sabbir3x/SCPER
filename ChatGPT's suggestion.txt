@@ -1,0 +1,106 @@
+আর সেই action n8n এ যাবে,
+👉 n8n AI (Gemini/OpenAI) দিয়ে কাজ করবে,
+👉 তারপর রেজাল্ট আবার তোর ওয়েবসাইটে ফিরে আসবে।
+
+⚙️ Option 1: Self-host n8n for Free (Best Way)
+🔹 Step 1: Deploy n8n to Render (Free Hosting)
+
+যাওয়া 👉 https://render.com
+
+GitHub লগইন কর।
+
+“New Web Service” ক্লিক কর।
+
+Source হিসেবে দাও 👉
+
+https://github.com/n8n-io/n8n
+
+
+নাম দাও minimind-n8n
+
+Build Command:
+
+npm run build
+
+
+Start Command:
+
+n8n start
+
+
+Free plan select করে Deploy কর।
+
+👉 এতে তুই পাবি একটা URL এরকম কিছু:
+
+https://minimind-n8n.onrender.com
+
+
+এটা তোর নিজের n8n server, পুরো free 💥
+
+🔹 Step 2: প্রথমবার লগইন কর
+
+যখন render deploy শেষ হবে,
+গিয়ে খুল n8n dashboard:
+
+https://minimind-n8n.onrender.com
+
+
+প্রথমবার username/password সেট কর।
+
+🔹 Step 3: তোর ওয়েবসাইটের সাথে কানেক্ট কর
+
+এখন তুই n8n এর ভিতরে একটা “Webhook” Node তৈরি করবি।
+
+👉 উদাহরণস্বরূপ workflow:
+
+[Webhook] → [Gemini API Request] → [Return Data]
+
+Webhook Node:
+
+Method: POST
+
+URL: /api/analyze
+→ এটা deploy করলে URL হবে:
+
+https://minimind-n8n.onrender.com/webhook/api/analyze
+
+
+তোর frontend থেকে এখন এভাবে request দিতে পারবি 👇
+
+await fetch("https://minimind-n8n.onrender.com/webhook/api/analyze", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ pageUrl: "https://facebook.com/xyz" }),
+});
+
+🔹 Step 4: Gemini Request Node (HTTP Request)
+
+Webhook-এর পর একটি HTTP Request Node দে,
+
+URL: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent
+
+Method: POST
+
+Headers:
+
+Content-Type: application/json
+Authorization: Bearer YOUR_GEMINI_API_KEY
+
+
+Body JSON:
+
+{
+  "contents": [
+    { "parts": [{ "text": "Analyze this Facebook page: {{$json.pageUrl}}" }] }
+  ]
+}
+
+🔹 Step 5: Return Response
+
+শেষে “Respond to Webhook” node ব্যবহার করো, যাতে রেজাল্ট frontend-এ ফিরে আসে।
+
+Frontend এ সহজে print করা যাবে:
+
+const res = await fetch(...);
+const data = await res.json();
+console.log(data.output);

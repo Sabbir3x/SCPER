@@ -15,6 +15,7 @@ export const Sidebar = ({ currentView, onViewChange }: SidebarProps) => {
     { id: 'drafts', label: 'Drafts Queue', icon: FileText },
     { id: 'campaigns', label: 'Campaigns', icon: Send },
     { id: 'messages', label: 'Message Center', icon: MessageSquare },
+    { id: 'minichat', label: 'Mini Chat', icon: MessageSquare },
     { id: 'settings', label: 'Settings', icon: Settings, adminOnly: true },
   ];
 
@@ -56,6 +57,15 @@ export const Sidebar = ({ currentView, onViewChange }: SidebarProps) => {
           );
         })}
       </nav>
+
+      <div className="p-4 border-t border-gray-700">
+          <button 
+            onClick={() => onViewChange('history')}
+            className="w-full text-left text-sm text-gray-400 hover:text-white hover:underline"
+          >
+            Analysis History
+          </button>
+      </div>
 
       <div className="p-4 border-t border-gray-700">
         <div className="mb-3">

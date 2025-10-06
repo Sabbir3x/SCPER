@@ -473,3 +473,10 @@ npx supabase secrets set BRIGHTDATA_PASSWORD=zdxb2xfaeej3
 npx supabase secrets set BRIGHTDATA_CONNECTION_STRING=brd-customer-hl_0a2d8a80-zone-isp:zdxb2xfaeej3@brd.superproxy.io:33335
 npx supabase secrets set BRIGHTDATA_CONNECTION_STRING=brd-customer-hl_0a2d8a80-zone-minimindagent:9gjm6a09c5ag@brd.superproxy.io:33335
 npx supabase secrets unset BRIGHTDATA_CONNECTION_STRING
+
+
+
+
+
+git config --global user.email "sabbirhossain.sbr142@gmail.com"
+  git config --global user.name "Sabbir3x"

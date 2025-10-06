@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoginForm } from './components/Auth/LoginForm';
@@ -8,7 +9,9 @@ import { DraftsQueue } from './components/Drafts/DraftsQueue';
 import { CampaignManager } from './components/Campaigns/CampaignManager';
 import { MessageCenter } from './components/Messages/MessageCenter';
 import { Settings } from './components/Settings/Settings';
-import { Toaster } from 'react-hot-toast'; // Import Toaster
+import { Toaster } from 'react-hot-toast';
+import { MiniChat } from './components/MiniChat/MiniChat'; // Import MiniChat
+import { AnalysisHistory } from './components/Analysis/AnalysisHistory';
 
 const AppContent = () => {
   const { session, user, loading } = useAuth();
@@ -34,7 +37,9 @@ const AppContent = () => {
       case 'dashboard':
         return <Dashboard />;
       case 'analyze':
-        return <PageAnalysis />;
+        return <PageAnalysis onViewChange={setCurrentView} />;
+      case 'history':
+        return <AnalysisHistory />;
       case 'drafts':
         return <DraftsQueue />;
       case 'campaigns':
@@ -43,6 +48,8 @@ const AppContent = () => {
         return <MessageCenter />;
       case 'settings':
         return <Settings />;
+      case 'minichat': // Add this case
+        return <MiniChat />;
       default:
         return <Dashboard />;
     }
@@ -59,7 +66,7 @@ const AppContent = () => {
 function App() {
   return (
     <AuthProvider>
-      <Toaster position="bottom-right" /> {/* Add Toaster component here */}
+      <Toaster position="bottom-right" />
       <AppContent />
     </AuthProvider>
   );

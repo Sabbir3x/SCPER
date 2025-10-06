@@ -55,15 +55,28 @@ export const DraftsQueue = () => {
     }
   };
 
+  const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL || "http://localhost:3001";
+
   const handleGenerateProposal = async (analysisId: string) => {
     setGenerating(prev => [...prev, analysisId]);
+    const toastId = toast.loading('Generating AI Proposal...');
     try {
-      const { error } = await supabase.functions.invoke('create-proposal', { body: { analysis_id: analysisId, user_id: user?.id } });
-      if (error) throw new Error(`Failed to generate proposal: ${error.message}`);
-      await loadAllData();
+      const response = await fetch(`${BACKEND_API_URL}/create-proposal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ analysisId: analysisId, userId: user?.id }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Failed to generate proposal');
+      }
+
+      toast.success('Proposal generated and added to queue!', { id: toastId });
+      await loadAllData(); // Refresh the data to show the new draft
     } catch (error: any) {
       console.error(error);
-      alert(error.message);
+      toast.error(`Error: ${error.message}`, { id: toastId });
     } finally {
       setGenerating(prev => prev.filter(id => id !== analysisId));
     }
